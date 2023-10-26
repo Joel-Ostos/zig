@@ -16,7 +16,7 @@ fn LinkedList(comptime T: type) type {
         size: usize,
         allocator: std.mem.Allocator,
 
-        fn init(alloc: std.mem.Allocator) @This() {
+        fn init(alloc: std.mem.Allocator) Self {
             return .{
                 .head = null,
                 .tail = null,
@@ -25,9 +25,9 @@ fn LinkedList(comptime T: type) type {
             };
         }
 
-        fn createNode(alloc: std.mem.Allocator, value: T) !?*Node {
-            var node = try alloc.create(Node);
-            errdefer alloc.destroy(node);
+        fn createNode(self: *Self, value: T) !?*Node {
+            var node = try self.allocator.create(Node);
+            errdefer self.allocator.destroy(node);
             node.next = null;
             node.prev = null;
             node.data = value;
@@ -35,7 +35,7 @@ fn LinkedList(comptime T: type) type {
         }
 
         fn pushFront(self: *Self, value: T) !?void {
-            var node = try createNode(self.allocator, value) orelse return;
+            var node = try createNode(self, value) orelse return;
             if (self.head == null) {
                 self.head = node;
                 self.tail = node;
@@ -49,19 +49,15 @@ fn LinkedList(comptime T: type) type {
         }
 
         // TODO implementar función para eliminar algún elemento por su indice o por su valor
-        pub fn delete() void{
-        }
-        
-        // TODO implementar quicksort 
-        pub fn quickSort() void {
-        }
+        pub fn delete() void {}
+
+        // TODO implementar quicksort
+        pub fn quickSort() void {}
 
         // TODO implementar binary search para la busqueda
-        pub fn find() void {
-        }
+        pub fn find() void {}
 
-        pub fn reverse() void {
-        }
+        pub fn reverse() void {}
 
         pub fn print(self: *Self) void {
             var curr = self.head;
@@ -78,9 +74,10 @@ const prueba = LinkedList(i32);
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    defer arena.deinit();
     const allocator = arena.allocator();
+    defer arena.deinit();
     var a = prueba.init(allocator);
+    std.log.info("{}", .{@TypeOf(a)});
 
     for (0..10) |i| {
         try a.pushFront(@intCast(i)) orelse return;
@@ -93,7 +90,7 @@ test "test" {
     defer arena.deinit();
     const allocator = arena.allocator();
     const a = LinkedList(i32);
-    var b =  a.init(allocator);
+    var b = a.init(allocator);
     try expect(LinkedList(i32) == @TypeOf(b));
     //try expect(LinkedList(f32) == @TypeOf(b));
 }
