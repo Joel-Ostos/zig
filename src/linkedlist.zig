@@ -55,9 +55,21 @@ fn LinkedList(comptime T: type) type {
         pub fn quickSort() void {}
 
         // TODO implementar binary search para la busqueda
-        pub fn find() void {}
+        pub fn find(self: *Self, value: T) ?T {
+            var current = self.head;
 
-        pub fn reverse() void {}
+            while (current != null){
+                if (current.?.data == value){
+                    return value;
+                }
+                current = current.?.prev;
+            }
+            return null;
+        }
+
+        pub fn reverse() void {
+
+        }
 
         pub fn print(self: *Self) void {
             var curr = self.head;
@@ -83,14 +95,22 @@ pub fn main() !void {
         try a.pushFront(@intCast(i)) orelse return;
     }
     a.print();
+    var result = a.find(12);
+    if (result)|foo|{
+        std.log.info("valor encontrado: {}", .{foo});
+    }else{
+        std.log.info("valor no encontrado", .{});
+    }
 }
 
-test "test" {
+test "pushing some items" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
-    const a = LinkedList(i32);
-    var b = a.init(allocator);
-    try expect(LinkedList(i32) == @TypeOf(b));
-    //try expect(LinkedList(f32) == @TypeOf(b));
+    const constructor = LinkedList(i32);
+    var list = constructor.init(allocator);
+    for (0..10) |i| {
+        try list.pushFront(@intCast(i)) orelse return;
+    }
+    list.print();
 }
