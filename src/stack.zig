@@ -41,45 +41,57 @@ pub fn Stack(comptime T: type) type{
                 self.size += 1;
                 return;
             }
-            var tmp = self.*.tail;
-            self.tail = nnode; 
-            nnode.prev = tmp;
-            tmp.?.next = nnode;
+            if(self.tail) |tail|{
+                tail.next = nnode;
+                nnode.prev = tail;
+            }
+            self.tail = nnode;
             self.size += 1;
         }
 
-        pub fn pop(self: *@This()) !void{
-            var tmp = self.*.tail;
-            if (self.size == 1){
-                self.alloc.destroy(self.*.tail.?);
-                self.alloc.destroy(self.*.head.?);
-                self.*.tail = null;
-                self.*.head = null;
+        pub fn pop(self: *@This()) !?T{
+            if (self.head) |head|{
+                self.head = head.next;
+                var value = head.data;
                 self.size -= 1;
-                return;
+                self.alloc.destroy(head);
+                return value;
             }
-            self.alloc.destroy(self.*.tail.?);
-            self.*.tail = tmp.?.prev;
-            self.*.tail.?.next = null;
-            self.size -= 1;
+            std.log.info("Trying to pop an empty stack!", .{});
+            return null;
         }
 
         pub fn print(self: *@This()) void{
-            var current = self.*.head;
+            var current = self.head;
             if (current == null){
                 std.log.info("El stack está vacío", .{});
                 return;
             }
             var i : usize = 0;
-            while (current != null) : (i+=1){
-                std.log.info("Elemento {} con valor {}", .{i, current.?.*.data});
-                current = current.?.next; 
+            while (current) |c| : (i+=1){
+                std.log.info("Elemento {} con valor {}", .{i, c.data});
+                current = c.next; 
             }
         }
     };
 }
 
 pub fn main() !void{
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    const construct = Stack(i32);
+    var stack = construct.init(allocator);
+    _ = try stack.push(80);
+    _ = try stack.push(70);
+    _ = try stack.push(60);
+    _ = try stack.push(50);
+    _ = try stack.pop();
+    _ = try stack.pop();
+    _ = try stack.push(30);
+    _ = try stack.push(20);
+    _ = try stack.push(10);
+    stack.print();
 }
 
 test "Push"{

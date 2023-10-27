@@ -34,7 +34,7 @@ fn LinkedList(comptime T: type) type {
             return node;
         }
 
-        fn pushFront(self: *Self, value: T) !?void {
+        fn pushFront(self: *Self, value: T) !void {
             var node = try createNode(self, value) orelse return;
             if (self.head == null) {
                 self.head = node;
@@ -42,11 +42,11 @@ fn LinkedList(comptime T: type) type {
                 self.size += 1;
                 return;
             }
-            var tmp = self.*.head;
+            node.prev = self.head;
             self.head = node;
-            node.prev = tmp;
             self.size += 1;
         }
+
 
         // TODO implementar función para eliminar algún elemento por su indice o por su valor
         pub fn delete() void {}
@@ -92,8 +92,9 @@ pub fn main() !void {
     std.log.info("{}", .{@TypeOf(a)});
 
     for (0..10) |i| {
-        try a.pushFront(@intCast(i)) orelse return;
+        try a.pushFront(@intCast(i)); 
     }
+
     a.print();
     var result = a.find(12);
     if (result)|foo|{
