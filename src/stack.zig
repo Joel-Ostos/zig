@@ -41,12 +41,12 @@ pub fn Stack(comptime T: type) type{
                 self.size += 1;
                 return;
             }
-            if(self.tail) |tail|{
-                tail.next = nnode;
-                nnode.prev = tail;
+            if (self.tail) |*tail|{
+                tail.*.next = nnode;
+                nnode.prev = tail.*;
+                tail.* = nnode;
+                self.size += 1;
             }
-            self.tail = nnode;
-            self.size += 1;
         }
 
         pub fn pop(self: *@This()) !?T{
