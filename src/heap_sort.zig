@@ -9,13 +9,13 @@ pub fn swap(a: *i32, b: *i32) void{
 pub fn max_heapify(arr: []i32, N:usize ,i: usize) void{
     var a: usize = (2*i)+1;
     var b: usize = (2*i)+2;
-    std.log.info("i = {} a = {} b = {}", .{i,a,b});
     var largest: usize = i;
+    std.log.info("i = {} a = {} b = {}", .{arr[i],a,b});
     if (a < N and arr[a] > arr[largest]) largest = a;
     if (b < N and arr[b] > arr[largest]) largest = b;
     if (largest != i){
         swap(&arr[i], &arr[largest]);
-        max_heapify(arr, N,largest);
+        max_heapify(arr, N, largest);
     }
 }
 
@@ -39,7 +39,7 @@ pub fn heap_sort(array: []i32) void{
 }
 
 pub fn main() void {
-    var array = [_]i32{13,4,1,26,7,8,9};
+    var array = [_]i32{7,6,5,4,3,2,1};
     heap_sort(&array);
     for (array) |i|{
         std.log.info("{}", .{i});

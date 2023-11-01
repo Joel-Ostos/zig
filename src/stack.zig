@@ -50,11 +50,10 @@ pub fn Stack(comptime T: type) type{
         }
 
         pub fn pop(self: *@This()) !?T{
-            if (self.head) |head|{
-                self.head = head.next;
-                var value = head.data;
+            if (self.tail) |tail|{
+                self.tail = tail.prev;
+                var value = tail.data;
                 self.size -= 1;
-                self.alloc.destroy(head);
                 return value;
             }
             std.log.info("Trying to pop an empty stack!", .{});
