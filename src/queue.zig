@@ -1,7 +1,7 @@
 const std = @import("std");
 const expect = @import("std").testing.expect;
 
-pub fn Queue(comptime T: type) type{
+pub fn Queue(comptime T: type) type {
     const node = struct {
         next: ?*@This(),
         prev: ?*@This(),
@@ -23,25 +23,25 @@ pub fn Queue(comptime T: type) type{
             };
         }
 
-        pub fn create_node(self: *@This(), value: T) !?*node{
+        pub fn create_node(self: *@This(), value: T) !?*node {
             var nnode = try self.alloc.create(node);
             errdefer self.alloc.destroy(nnode);
-            nnode.next = null; 
+            nnode.next = null;
             nnode.prev = null;
             nnode.data = value;
 
             return nnode;
         }
-        
-        pub fn push(self: *@This(), value: T) !?void{
+
+        pub fn push(self: *@This(), value: T) !?void {
             var nnode = try create_node(self, value) orelse return;
-            if (self.head == null){
+            if (self.head == null) {
                 self.head = nnode;
                 self.tail = nnode;
                 self.size += 1;
                 return;
             }
-            if (self.tail) |*tail|{
+            if (self.tail) |*tail| {
                 tail.*.next = nnode;
                 nnode.prev = tail.*;
                 tail.* = nnode;
@@ -49,8 +49,8 @@ pub fn Queue(comptime T: type) type{
             }
         }
 
-        pub fn pop(self: *@This()) !?T{
-            if (self.head) |tail|{
+        pub fn pop(self: *@This()) !?T {
+            if (self.head) |tail| {
                 self.head = tail.next;
                 var value = tail.data;
                 self.size -= 1;
@@ -60,22 +60,22 @@ pub fn Queue(comptime T: type) type{
             return null;
         }
 
-        pub fn print(self: *@This()) void{
+        pub fn print(self: *@This()) void {
             var current = self.head;
-            if (current == null){
+            if (current == null) {
                 std.log.info("El stack está vacío", .{});
                 return;
             }
-            var i : usize = 0;
-            while (current) |c| : (i+=1){
-                std.log.info("Elemento {} con valor {}", .{i, c.data});
-                current = c.next; 
+            var i: usize = 0;
+            while (current) |c| : (i += 1) {
+                std.log.info("Elemento {} con valor {}", .{ i, c.data });
+                current = c.next;
             }
         }
     };
 }
 
-pub fn main() !void{
+pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();

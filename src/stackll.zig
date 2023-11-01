@@ -1,16 +1,16 @@
 const std = @import("std");
-pub fn stack(comptime T: type) type{
+pub fn stack(comptime T: type) type {
     const node = struct {
         next: ?*@This(),
         data: T,
     };
 
-    return struct{
+    return struct {
         head: ?*node,
         tail: ?*node,
         size: usize,
         alloc: std.mem.Allocator,
-        pub fn init(allocator: std.mem.Allocator) @This(){
+        pub fn init(allocator: std.mem.Allocator) @This() {
             return .{
                 .head = null,
                 .tail = null,
@@ -19,7 +19,7 @@ pub fn stack(comptime T: type) type{
             };
         }
 
-        pub fn create_node(self: *@This(), data: T) !?*node{
+        pub fn create_node(self: *@This(), data: T) !?*node {
             var nnode = try self.alloc.create(node);
             errdefer self.alloc.destroy(nnode);
             nnode.data = data;
@@ -28,13 +28,13 @@ pub fn stack(comptime T: type) type{
         }
 
         pub fn push(self: *@This(), data: T) !void {
-            var nnode = try create_node(self,data);
+            var nnode = try create_node(self, data);
             self.head = nnode;
             self.size += 1;
         }
 
-        pub fn pop(self: *@This()) !?T{
-            if (self.head)|head|{
+        pub fn pop(self: *@This()) !?T {
+            if (self.head) |head| {
                 self.head = head.next;
                 var value = head.data;
                 self.alloc.destroy(head);
@@ -44,9 +44,9 @@ pub fn stack(comptime T: type) type{
             std.log.info("Trying to pop an empty stack!", .{});
             return null;
         }
-        pub fn print(self: *@This()) void{
+        pub fn print(self: *@This()) void {
             var curr = self.head;
-            while (curr) |head|{
+            while (curr) |head| {
                 std.log.info("In stack -> {}", .{head.data});
                 curr = head.next;
             }
@@ -54,7 +54,7 @@ pub fn stack(comptime T: type) type{
     };
 }
 
-pub fn main() !void{
+pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();

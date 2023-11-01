@@ -1,6 +1,6 @@
 const std = @import("std");
 
-fn swap(a: *i32, b: *i32) void{
+fn swap(a: *i32, b: *i32) void {
     var tmp = a.*;
     a.* = b.*;
     b.* = tmp;
@@ -28,9 +28,9 @@ pub fn partition(A: []i32, lo: usize, hi: usize) usize {
     return i;
 }
 pub fn main() !void {
-    var arreglo = [_]i32{2,3,1,4,7,1};
-    sort(&arreglo, 0, arreglo.len-1);
-    for (arreglo) |i|{
+    var arreglo = [_]i32{ 2, 3, 1, 4, 7, 1 };
+    sort(&arreglo, 0, arreglo.len - 1);
+    for (arreglo) |i| {
         std.log.info("{}", .{i});
     }
 }
