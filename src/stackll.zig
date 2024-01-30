@@ -62,8 +62,9 @@ pub fn main() !void {
     var mistack = constructor.init(allocator);
     _ = try mistack.push(10);
     _ = try mistack.push(20);
-    _ = try mistack.pop();
-    _ = try mistack.pop();
+    _ = try mistack.push(30);
+    _ = try mistack.push(40);
+    _ = try mistack.push(50);
     _ = try mistack.pop();
     mistack.print();
 }

@@ -10,9 +10,9 @@ pub fn max_heapify(arr: []i32, N: usize, i: usize) void {
     var a: usize = (2 * i) + 1;
     var b: usize = (2 * i) + 2;
     var largest: usize = i;
-    std.log.info("i = {} a = {} b = {}", .{ arr[i], a, b });
     if (a < N and arr[a] > arr[largest]) largest = a;
     if (b < N and arr[b] > arr[largest]) largest = b;
+    imprimir(arr);
     if (largest != i) {
         swap(&arr[i], &arr[largest]);
         max_heapify(arr, N, largest);
@@ -38,8 +38,15 @@ pub fn heap_sort(array: []i32) void {
     }
 }
 
+pub fn imprimir(array: []i32) void {
+    std.log.info("Imprimiendo desde acá", .{});
+    for (array) |a| {
+        std.log.info("-> {}", .{a});
+    }
+}
+
 pub fn main() void {
-    var array = [_]i32{ 7, 6, 5, 4, 3, 2, 1 };
+    var array = [_]i32{ 1, 6, 3, 2, 8, 5, 4, 7 };
     heap_sort(&array);
     for (array) |i| {
         std.log.info("{}", .{i});

@@ -17,14 +17,16 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    const map = [5][8]i32{
-        [_]i32{ '#', '#', '.', '.', '.', '.', '.', '#' },
-        [_]i32{ '#', '.', 'A', '#', '.', '.', '#', '#' },
-        [_]i32{ '#', '.', '#', '#', '.', '#', 'B', '#' },
-        [_]i32{ '#', '.', '.', '.', '.', '.', '#', '#' },
-        [_]i32{ '#', '#', '#', '#', '#', '#', '#', '#' },
+    const map = [5][8]u8{
+        [_]u8{ '#', '#', '.', '.', '.', '.', '.', '.' },
+        [_]u8{ '#', '.', 'A', '#', '.', '.', '.', '.' },
+        [_]u8{ '#', '.', '#', '#', '.', '#', 'B', '#' },
+        [_]u8{ '#', '.', '.', '.', '.', '.', '#', '#' },
+        [_]u8{ '#', '#', '#', '#', '#', '#', '#', '#' },
     };
+    var string: []u8 = "afka";
 
+    std.log.info("Tipo de arreglo: {}", .{@TypeOf(string)});
     var A: pair = pair{ .first = 0, .second = 0 };
     var B: pair = pair{ .first = 0, .second = 0 };
 
@@ -62,7 +64,7 @@ pub fn main() !void {
         }
     }
 
-    if (B.first == -1 and B.second == -1) {
+    if (B.first != -1 and B.second != -1) {
         while (B.first != A.first or B.second != A.second) {
             B = parents[@intCast(B.first)][@intCast(B.second)];
             std.log.info("{} {}", .{ B.first, B.second });
