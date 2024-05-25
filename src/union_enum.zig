@@ -53,4 +53,7 @@ pub fn main() void {
     }
     std.debug.print("\nNum = {}", .{num});
     std.debug.print("\nArr = {any}", .{arr});
+
+    var xd_2: tipos = tipos{ .a = s_1{ .name = "kaj", .email = "akjack" } };
+    std.debug.print("{any}", .{xd_2.a});
 }
